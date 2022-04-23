@@ -1,6 +1,7 @@
 package com.mohammed.rest.webservices.services.impl;
 
 import com.mohammed.rest.webservices.Exception.NoUserExistException;
+import com.mohammed.rest.webservices.Exception.UserAlreadyExistException;
 import com.mohammed.rest.webservices.Exception.UserNotFoundException;
 import com.mohammed.rest.webservices.entites.User;
 import com.mohammed.rest.webservices.repositories.UserRepository;
@@ -43,6 +44,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User saveUser(User user) {
-        return userRepository.save(new User(user.getName()));
+        Optional<User> userOptional = userRepository.findByName(user.getName());
+        if(!userOptional.isPresent()) {
+            return userRepository.save(user);
+        }
+        else {
+            throw new UserAlreadyExistException("user already exist");
+        }
+        //return userRepository.save(new User(user.getName()));
     }
 }

@@ -1,5 +1,6 @@
 package com.mohammed.rest.webservices.controllers;
 
+import com.mohammed.rest.webservices.Exception.UserAlreadyExistException;
 import com.mohammed.rest.webservices.entites.User;
 import com.mohammed.rest.webservices.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -27,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/users/add")
-    public ResponseEntity<User> addUser (@RequestBody User user){
+    public ResponseEntity<User> addUser (@Valid @RequestBody User user) throws UserAlreadyExistException {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 }

@@ -1,10 +1,13 @@
 package com.mohammed.rest.webservices.Exception.genericExcption;
 
 import com.mohammed.rest.webservices.Exception.NoUserExistException;
+import com.mohammed.rest.webservices.Exception.UserAlreadyExistException;
 import com.mohammed.rest.webservices.Exception.UserNotFoundException;
 import com.sun.jdi.request.ExceptionRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,20 +23,36 @@ import java.util.Date;
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request){
+    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
         GenericExceptionResponse genericExceptionResponse = new GenericExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(genericExceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request){
+    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
         GenericExceptionResponse genericExceptionResponse = new GenericExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(genericExceptionResponse, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(NoUserExistException.class)
-    public final ResponseEntity<Object> handleNoUserExistException(NoUserExistException ex, WebRequest request){
+    public final ResponseEntity<Object> handleNoUserExistException(NoUserExistException ex, WebRequest request) {
         GenericExceptionResponse genericExceptionResponse = new GenericExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(genericExceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public final ResponseEntity<Object> handleUserAlreadyExistException(UserAlreadyExistException ex, WebRequest request) {
+        GenericExceptionResponse genericExceptionResponse = new GenericExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(genericExceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        GenericExceptionResponse genericExceptionResponse = new GenericExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                ex.getBindingResult().toString());
+        return new ResponseEntity<>(genericExceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
 
