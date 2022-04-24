@@ -26,7 +26,7 @@ public class User {
     @Size(min = 3, max = 30, message = "name should be longer than 3 chars")
     @NotBlank
     private String name;
-    @Past
+    @Past (message = "the date mast be in the past")
     private Date birthDay;
 
     public User(String name, Date birthDay){
@@ -34,7 +34,6 @@ public class User {
         this.birthDay = birthDay;
     }
     public User(String name){
-        this.name= name;
-        this.birthDay = new Date();
+        this(name, new Date());
     }
 }
