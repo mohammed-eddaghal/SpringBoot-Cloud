@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,8 +23,18 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers(){
-        return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
+    public ResponseEntity<List<EntityModel<User>>> getUsers(){
+        List<User> userList = userService.findAllUsers();
+
+        List<EntityModel<User>> entityModelList;
+        entityModelList = userList.stream().map(user -> {
+            EntityModel<User> model = EntityModel.of(user);
+            WebMvcLinkBuilder linkBuilder = linkTo(methodOn(this.getClass()).getOneUser(user.getId()));
+            model.add(linkBuilder.withRel("user "+user.getId()));
+            return model;
+        }).toList();
+
+        return new ResponseEntity<>(entityModelList, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
