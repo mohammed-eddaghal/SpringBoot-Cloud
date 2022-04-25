@@ -11,16 +11,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Locale;
 
 
-@Controller
-@RequestMapping("api/v1")
+@RestController
+@RequestMapping(value = "api/v1")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -60,7 +58,7 @@ public class UserController {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/helloworld_i18n", headers="Accept=application/json")
+    /*@GetMapping(value = "/helloworld_i18n", headers="Accept=application/json")
     public String helloworld(
             //@RequestHeader(name = "Accept-Language", defaultValue = "en", required = false) Locale locale
     ) {
@@ -78,5 +76,6 @@ public class UserController {
                 "default message",
                 LocaleContextHolder.getLocale());
         return message;
-    }
+    }*/
+
 }
